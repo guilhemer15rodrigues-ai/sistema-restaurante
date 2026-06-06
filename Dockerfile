@@ -17,11 +17,13 @@ RUN rm -rf vendor \
     public/clear-cache.php public/conexao.php \
     public/migrar.php public/rodar_seeder.php .router.php
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
 RUN mkdir -p storage/framework/sessions storage/framework/views \
     storage/framework/cache/data storage/logs bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+RUN chmod -R 775 storage bootstrap/cache
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
