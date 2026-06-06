@@ -49,7 +49,7 @@ class LoginController extends Controller
         $destino = match ($user->role) {
             'garcom' => route('mesas.index'),
             'chef'   => route('chef.preparo'),
-            'caixa'  => route('caixa.dashboard'),
+            'caixa'  => route('caixa.pagar-mesa'),
             default  => route('dashboard'),
         };
 
