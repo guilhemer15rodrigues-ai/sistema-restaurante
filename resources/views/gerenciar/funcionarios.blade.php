@@ -43,20 +43,59 @@
 
 /* Layout principal */
 .ger-layout {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 24px;
-    align-items: start;
+    display: block;
+}
+
+.funcionarios-topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 18px;
 }
 
 /* Painel de formulário */
+.form-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 135;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(5px);
+}
+
+.form-modal-overlay.open {
+    display: flex;
+}
+
 .form-panel {
-    position: sticky;
-    top: 90px;
+    width: min(560px, 100%);
+    max-height: calc(100vh - 36px);
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 20px;
     overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.form-panel .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.form-close {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(250, 178, 105, 0.05);
+    color: var(--cream);
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .panel-header {
@@ -81,6 +120,8 @@
 
 .form-content {
     padding: 20px;
+    max-height: calc(100vh - 116px);
+    overflow-y: auto;
 }
 
 /* Formulário */
@@ -475,17 +516,14 @@
     filter: brightness(1.05);
 }
 
+.btn-primary.btn-top {
+    width: auto;
+    min-height: 42px;
+    padding: 0 18px;
+}
+
 /* Responsividade */
 @media (max-width: 900px) {
-    .ger-layout {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .form-panel {
-        position: static;
-    }
-    
     .funcionarios-grid {
         grid-template-columns: 1fr;
     }
@@ -517,12 +555,21 @@ html {
 @section('content')
 
 <div class="ger-layout">
-    <!-- Painel de cadastro -->
-    <div class="form-panel">
+    <div class="funcionarios-topbar">
+        <button type="button" class="btn-primary btn-top" onclick="abrirCadastroFuncionario()">
+            <i class="fas fa-user-plus"></i> Cadastrar Funcionario
+        </button>
+    </div>
+
+    <div class="form-modal-overlay" id="funcionario-form-modal" onclick="fecharCadastroFuncionario(event)">
+        <div class="form-panel" onclick="event.stopPropagation()">
         <div class="panel-header">
             <div class="panel-title">
-                <i class="fas fa-user-plus"></i> Novo Funcionário
+                <i class="fas fa-user-plus"></i> Cadastrar Funcionario
             </div>
+            <button type="button" class="form-close" onclick="fecharCadastroFuncionario()" aria-label="Fechar">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="form-content">
             <form method="POST" action="{{ route('usuarios.store') }}">
@@ -573,6 +620,7 @@ html {
                     <i class="fas fa-save"></i> Cadastrar Funcionário
                 </button>
             </form>
+        </div>
         </div>
     </div>
 
@@ -704,6 +752,29 @@ html {
 
 @section('scripts')
 <script>
+function atualizarScrollModal() {
+    const hasOpenModal = document.querySelector('.form-modal-overlay.open, .user-details-overlay.open');
+    document.body.style.overflow = hasOpenModal ? 'hidden' : '';
+}
+
+function abrirCadastroFuncionario() {
+    const modal = document.getElementById('funcionario-form-modal');
+    if (!modal) return;
+
+    modal.classList.add('open');
+    atualizarScrollModal();
+}
+
+function fecharCadastroFuncionario(event) {
+    if (event && event.target !== event.currentTarget) return;
+
+    const modal = document.getElementById('funcionario-form-modal');
+    if (!modal) return;
+
+    modal.classList.remove('open');
+    atualizarScrollModal();
+}
+
 function abrirDetalhesUsuario(card, event, force) {
     if (!card) return;
     if (event && !force && event.target.closest('a, button, form, input, select, textarea')) {
@@ -725,7 +796,7 @@ function abrirDetalhesUsuario(card, event, force) {
     avatar.style.color = card.dataset.color || '#FAB269';
 
     modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    atualizarScrollModal();
 }
 
 function fecharDetalhesUsuario(event) {
@@ -733,14 +804,19 @@ function fecharDetalhesUsuario(event) {
 
     const modal = document.getElementById('user-details-modal');
     modal.classList.remove('open');
-    document.body.style.overflow = '';
+    atualizarScrollModal();
 }
 
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
+        fecharCadastroFuncionario();
         fecharDetalhesUsuario();
     }
 });
+
+@if($errors->any())
+document.addEventListener('DOMContentLoaded', abrirCadastroFuncionario);
+@endif
 
 function validarEmail(input) {
     const hint = document.getElementById('email-hint');
