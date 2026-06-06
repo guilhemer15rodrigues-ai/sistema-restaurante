@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/vendas', [DashboardController::class, 'vendas'])->name('dashboard.vendas');
     Route::get('/dashboard/mesas', [DashboardController::class, 'mesas'])->name('dashboard.mesas');
     Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
+    Route::get('/dashboard/cozinha', [DashboardController::class, 'cozinhaGarcom'])->name('dashboard.cozinha');
     Route::get('/dashboard/relatorios', [DashboardController::class, 'relatorios'])->name('dashboard.relatorios');
 
     Route::get('/pedidos/novo', [OrderController::class, 'create'])->name('orders.create');

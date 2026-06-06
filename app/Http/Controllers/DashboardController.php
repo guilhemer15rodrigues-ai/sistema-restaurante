@@ -164,6 +164,26 @@ class DashboardController extends Controller
         return view('dashboard.pedidos', compact('pedidos'));
     }
 
+    public function cozinhaGarcom(): View
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user?->role !== 'garcom') {
+            abort(403);
+        }
+
+        return view('dashboard.garcom-cozinha', [
+            'pedidosProntosPagamento' => Order::where('status', 'pronto_entrega')
+                ->with('table', 'user', 'items.menuItem')
+                ->orderByRaw('CASE WHEN user_id = ? THEN 0 ELSE 1 END', [$user->id])
+                ->orderBy('horario_termino_preparo')
+                ->orderBy('created_at')
+                ->get(),
+            'cozinhaEventCursor' => KitchenEvent::max('id') ?? 0,
+        ]);
+    }
+
     public function relatorios(Request $request)
     {
         /** @var User|null $user */

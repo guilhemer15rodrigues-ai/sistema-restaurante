@@ -3074,7 +3074,7 @@ tbody tr:hover {
     <a href="{{ route('dashboard.pedidos') }}" class="{{ request()->routeIs('dashboard.pedidos','orders.*') ? 'active' : '' }}">
       <div class="nav-ic"><i class="fa-solid fa-receipt"></i></div> Pedidos
     </a>
-    <a href="{{ route('dashboard') }}#entregas" class="{{ request()->is('dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard.cozinha') }}" class="{{ request()->routeIs('dashboard.cozinha') ? 'active' : '' }}">
       <div class="nav-ic"><i class="fa-solid fa-fire-burner"></i></div> Cozinha
     </a>
     <a href="{{ route('mesas.index') }}" class="{{ request()->routeIs('mesas.conta') ? 'active' : '' }}">
@@ -3137,7 +3137,7 @@ tbody tr:hover {
     <a href="{{ route('dashboard.pedidos') }}" class="{{ request()->routeIs('dashboard.pedidos','orders.*') ? 'active' : '' }}">
       <i class="fa-solid fa-receipt"></i><span>Pedidos</span>
     </a>
-    <a href="{{ route('dashboard') }}#entregas" class="{{ request()->is('dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard.cozinha') }}" class="{{ request()->routeIs('dashboard.cozinha') ? 'active' : '' }}">
       <i class="fa-solid fa-fire-burner"></i><span>Cozinha ({{ $mobileEntregasCount }})</span>
     </a>
     <a href="{{ route('mesas.index') }}" class="{{ request()->routeIs('mesas.conta') ? 'active' : '' }}">
@@ -3197,7 +3197,7 @@ tbody tr:hover {
           @elseif($authRole === 'garcom')
           <a href="{{ route('mesas.index') }}"><i class="fa-solid fa-chair"></i> Abrir mesa</a>
           <a href="{{ route('orders.create') }}"><i class="fa-solid fa-plus"></i> Novo pedido</a>
-          <a href="{{ route('dashboard') }}#entregas"><i class="fa-solid fa-fire-burner"></i> Cozinha</a>
+          <a href="{{ route('dashboard.cozinha') }}"><i class="fa-solid fa-fire-burner"></i> Cozinha</a>
           <a href="{{ route('mesas.index') }}"><i class="fa-solid fa-file-invoice"></i> Conta da mesa</a>
           @elseif($authRole === 'caixa')
           <a href="{{ route('caixa.pagar-mesa') }}"><i class="fa-solid fa-cash-register"></i> Fechar conta</a>

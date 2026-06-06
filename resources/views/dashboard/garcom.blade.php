@@ -233,7 +233,7 @@
 <div class="garcom-quick-actions" aria-label="Atalhos rapidos do garcom">
     <a href="{{ route('mesas.index') }}" class="garcom-action"><i class="fa-solid fa-chair"></i> Ver Mesas</a>
     <a href="{{ route('orders.create') }}" class="garcom-action"><i class="fa-solid fa-plus"></i> Novo Pedido</a>
-    <a href="#entregas" class="garcom-action"><i class="fa-solid fa-bell-concierge"></i> Entregas ({{ $pedidosProntosPagamento->count() }})</a>
+    <a href="{{ route('dashboard.cozinha') }}" class="garcom-action"><i class="fa-solid fa-bell-concierge"></i> Entregas ({{ $pedidosProntosPagamento->count() }})</a>
     <a href="{{ route('mesas.index') }}" class="garcom-action"><i class="fa-solid fa-lock"></i> Fechar Conta</a>
 </div>
 
