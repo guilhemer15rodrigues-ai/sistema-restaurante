@@ -82,9 +82,10 @@ class ChefController extends Controller
         }
 
         DB::transaction(function () use ($item, $status) {
+            $statusAnterior = $item->status;
             $item->status = $status;
 
-            if ($status === 'pronto') {
+            if ($status === 'pronto' && $statusAnterior !== 'pronto') {
                 $item->horario_pronto = now();
 
                 // Descontar estoque ao marcar como pronto
@@ -146,6 +147,11 @@ class ChefController extends Controller
                 }
             }
 
+            if (in_array($status, ['pendente', 'em_preparo'], true) && $statusAnterior === 'pronto') {
+                $item->horario_pronto = null;
+                $this->devolverEstoqueItem($item, 'chef voltou status de pronto');
+            }
+
             $item->save();
 
             // Verificar se TODOS os itens NÃO-CANCELADOS do pedido estão prontos
@@ -183,6 +189,14 @@ class ChefController extends Controller
                     ],
                 ]);
             }
+
+            if (!$todosProntos && $pedido->status === 'pronto_entrega') {
+                $pedido->update([
+                    'status'                  => 'em_preparo',
+                    'horario_pronto'          => null,
+                    'horario_termino_preparo' => null,
+                ]);
+            }
         });
 
         $labelStatus = match ($status) {
@@ -195,5 +209,60 @@ class ChefController extends Controller
 
         return redirect()->route('chef.preparo')
             ->with('success', "Item marcado como {$labelStatus}");
+    }
+
+    private function devolverEstoqueItem(OrderItem $item, string $motivo): void
+    {
+        $item->loadMissing('menuItem.ingredients.stockItem', 'menuItem.stockItem');
+        $menuItem = $item->menuItem;
+
+        if (!$menuItem) {
+            return;
+        }
+
+        $movimentos = [];
+        $unidadesPeso = ['kg', 'g', 'gramas', 'grama', 'l', 'ml'];
+
+        if ($menuItem->ingredients->isNotEmpty()) {
+            foreach ($menuItem->ingredients as $ing) {
+                $stock = $ing->stockItem;
+                if (!$stock) {
+                    continue;
+                }
+
+                $qtdPorcao = 0;
+                if (!empty($ing->quantidade) && $ing->quantidade > 0) {
+                    $qtdPorcao = (float) $ing->quantidade;
+                } elseif (!empty($ing->quantidade_gramas) && $ing->quantidade_gramas > 0) {
+                    $qtdPorcao = strtolower($stock->unidade) === 'kg'
+                        ? $ing->quantidade_gramas / 1000
+                        : $ing->quantidade_gramas;
+                }
+
+                if ($qtdPorcao > 0) {
+                    $movimentos[] = [$stock, $qtdPorcao * $item->quantidade];
+                }
+            }
+        } elseif ($menuItem->stockItem) {
+            $stock = $menuItem->stockItem;
+            $qtdPorcao = in_array(strtolower($stock->unidade), $unidadesPeso) ? 0.3 : 1;
+            $movimentos[] = [$stock, $qtdPorcao * $item->quantidade];
+        }
+
+        foreach ($movimentos as [$stock, $quantidade]) {
+            $anterior = $stock->quantidade_atual;
+            $stock->quantidade_atual += $quantidade;
+            $stock->save();
+
+            StockMovement::create([
+                'stock_item_id'       => $stock->id,
+                'user_id'             => Auth::id(),
+                'tipo'                => 'entrada',
+                'quantidade'          => $quantidade,
+                'quantidade_anterior' => $anterior,
+                'quantidade_nova'     => $stock->quantidade_atual,
+                'motivo'              => "Pedido #{$item->order_id} - {$menuItem->nome} x{$item->quantidade} ({$motivo})",
+            ]);
+        }
     }
 }

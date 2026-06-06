@@ -75,6 +75,11 @@ class OrderController extends Controller
                 ->with('error', '❌ Este pedido não pode mais ser editado.');
         }
 
+        if ($order->items()->where('status', 'pronto')->exists()) {
+            return redirect()->route('mesas.conta', $order->table_id)
+                ->with('error', 'Este pedido ja possui item pronto e nao pode mais ser editado.');
+        }
+
         $categorias = Category::with('menuItems.stockItem')->get();
         $categoriasDisponiveis = $categorias->map(function ($categoria) {
             $categoria->menuItems = $categoria->menuItems->filter(function ($item) {
@@ -104,6 +109,10 @@ class OrderController extends Controller
 
         if (in_array($order->status, ['pago', 'cancelado', 'pronto_entrega', 'aguardando_pagamento'])) {
             return back()->with('error', '❌ Este pedido não pode mais ser editado.');
+        }
+
+        if ($order->items()->where('status', 'pronto')->exists()) {
+            return back()->with('error', 'Este pedido ja possui item pronto e nao pode mais ser editado.');
         }
 
         if (!$request->has('itens') && $request->has('items')) {
@@ -398,7 +407,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $item->load('order.items.menuItem', 'order.table', 'order.user', 'menuItem');
+        $item->load('order.items.menuItem', 'order.table', 'order.user', 'menuItem.ingredients.stockItem', 'menuItem.stockItem');
         $order = $item->order;
 
         if (!$order || in_array($order->status, ['pago', 'aguardando_pagamento', 'cancelado'])) {
@@ -406,6 +415,10 @@ class OrderController extends Controller
         }
 
         DB::transaction(function () use ($item, $order) {
+            if ($item->status === 'pronto') {
+                $this->devolverEstoqueItem($item, 'cancelamento de item pronto');
+            }
+
             $item->update(['status' => 'cancelado']);
 
             $novoTotal = $order->items()
@@ -571,6 +584,61 @@ class OrderController extends Controller
                 ->with('success', '✅ Pedido #' . str_pad($order->id, 4, '0', STR_PAD_LEFT) . ' cancelado.');
         }
         return redirect()->route('dashboard')->with('success', '✅ Pedido cancelado.');
+    }
+
+    private function devolverEstoqueItem(OrderItem $item, string $motivo): void
+    {
+        $item->loadMissing('menuItem.ingredients.stockItem', 'menuItem.stockItem');
+        $menuItem = $item->menuItem;
+
+        if (!$menuItem) {
+            return;
+        }
+
+        $movimentos = [];
+        $unidadesPeso = ['kg', 'g', 'gramas', 'grama', 'l', 'ml'];
+
+        if ($menuItem->ingredients->isNotEmpty()) {
+            foreach ($menuItem->ingredients as $ing) {
+                $stock = $ing->stockItem;
+                if (!$stock) {
+                    continue;
+                }
+
+                $qtdPorcao = 0;
+                if (!empty($ing->quantidade) && $ing->quantidade > 0) {
+                    $qtdPorcao = (float) $ing->quantidade;
+                } elseif (!empty($ing->quantidade_gramas) && $ing->quantidade_gramas > 0) {
+                    $qtdPorcao = strtolower($stock->unidade) === 'kg'
+                        ? $ing->quantidade_gramas / 1000
+                        : $ing->quantidade_gramas;
+                }
+
+                if ($qtdPorcao > 0) {
+                    $movimentos[] = [$stock, $qtdPorcao * $item->quantidade];
+                }
+            }
+        } elseif ($menuItem->stockItem) {
+            $stock = $menuItem->stockItem;
+            $qtdPorcao = in_array(strtolower($stock->unidade), $unidadesPeso) ? 0.3 : 1;
+            $movimentos[] = [$stock, $qtdPorcao * $item->quantidade];
+        }
+
+        foreach ($movimentos as [$stock, $quantidade]) {
+            $anterior = $stock->quantidade_atual;
+            $stock->quantidade_atual += $quantidade;
+            $stock->save();
+
+            StockMovement::create([
+                'stock_item_id'       => $stock->id,
+                'user_id'             => Auth::id(),
+                'tipo'                => 'entrada',
+                'quantidade'          => $quantidade,
+                'quantidade_anterior' => $anterior,
+                'quantidade_nova'     => $stock->quantidade_atual,
+                'motivo'              => "Pedido #{$item->order_id} - {$menuItem->nome} x{$item->quantidade} ({$motivo})",
+            ]);
+        }
     }
 
     private function kitchenPayload(Order $order, array $extra = []): array
