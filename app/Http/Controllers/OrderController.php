@@ -25,7 +25,7 @@ class OrderController extends Controller
 
         if ($tableId) {
             $pedidoAtivo = Order::where('table_id', $tableId)
-                ->whereNotIn('status', ['pago', 'cancelado', 'pronto_entrega', 'aguardando_pagamento'])
+                ->whereNotIn('status', ['pago', 'cancelado', 'pronto_entrega', 'entregue', 'aguardando_pagamento'])
                 ->first();
 
             if ($pedidoAtivo) {
@@ -34,7 +34,7 @@ class OrderController extends Controller
             }
 
             $contaFechada = Order::where('table_id', $tableId)
-                ->whereIn('status', ['pronto_entrega', 'aguardando_pagamento'])
+                ->where('status', 'aguardando_pagamento')
                 ->exists();
 
             if ($contaFechada) {
@@ -70,7 +70,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        if (in_array($order->status, ['pago', 'cancelado', 'pronto_entrega', 'aguardando_pagamento'])) {
+        if (in_array($order->status, ['pago', 'cancelado', 'pronto_entrega', 'entregue', 'aguardando_pagamento'])) {
             return redirect()->route('mesas.conta', $order->table_id)
                 ->with('error', '❌ Este pedido não pode mais ser editado.');
         }
@@ -107,7 +107,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        if (in_array($order->status, ['pago', 'cancelado', 'pronto_entrega', 'aguardando_pagamento'])) {
+        if (in_array($order->status, ['pago', 'cancelado', 'pronto_entrega', 'entregue', 'aguardando_pagamento'])) {
             return back()->with('error', '❌ Este pedido não pode mais ser editado.');
         }
 
@@ -194,7 +194,7 @@ class OrderController extends Controller
         ]);
 
         $pedidoAtivo = Order::where('table_id', $validated['table_id'])
-            ->whereNotIn('status', ['pago', 'cancelado', 'pronto_entrega', 'aguardando_pagamento'])
+            ->whereNotIn('status', ['pago', 'cancelado', 'pronto_entrega', 'entregue', 'aguardando_pagamento'])
             ->first();
 
         if ($pedidoAtivo) {
@@ -203,7 +203,7 @@ class OrderController extends Controller
         }
 
         $contaFechada = Order::where('table_id', $validated['table_id'])
-            ->whereIn('status', ['pronto_entrega', 'aguardando_pagamento'])
+            ->where('status', 'aguardando_pagamento')
             ->exists();
 
         if ($contaFechada) {
@@ -366,17 +366,13 @@ class OrderController extends Controller
 
         $novoStatus = $request->status;
 
-        // "entregue" pelo garçom → vira aguardando_pagamento no Order
-        // mas os order_items ficam marcados como 'entregue'
+        // Entregar nao fecha a conta; apenas marca o pedido e os itens como entregues.
         $statusPedido = $novoStatus;
-        if ($novoStatus === 'entregue') {
-            $statusPedido = 'aguardando_pagamento';
-        }
 
         DB::transaction(function () use ($order, $statusPedido, $novoStatus) {
             $updates = ['status' => $statusPedido];
 
-            if ($statusPedido === 'aguardando_pagamento') {
+            if ($statusPedido === 'entregue') {
                 $updates['horario_entrega'] = now();
 
                 // Marcar todos os itens do pedido como 'entregue'
@@ -392,13 +388,13 @@ class OrderController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Pedido marcado como entregue. Aguardando pagamento.',
+                'message' => 'Pedido marcado como entregue.',
                 'redirect' => route('mesas.conta', $order->table_id),
             ]);
         }
 
         return redirect()->route('mesas.conta', $order->table_id)
-            ->with('success', '✅ Pedido marcado como entregue! Aguardando pagamento.');
+            ->with('success', 'Pedido marcado como entregue.');
     }
 
     public function cancelarItem(OrderItem $item)

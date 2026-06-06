@@ -379,7 +379,7 @@ Mesa {{ $mesa->numero }} — Conta
         @foreach($pedidos as $pedido)
         @php
             $cores  = ['em_preparo'=>'warning','pronto'=>'success','pronto_entrega'=>'warning','aguardando_pagamento'=>'info','entregue'=>'info','aberto'=>'secondary'];
-            $labels = ['em_preparo'=>'Em preparo','pronto'=>'Pronto','pronto_entrega'=>'Aguardando pagamento','aguardando_pagamento'=>'Aguardando pagamento','entregue'=>'Entregue','aberto'=>'Aberto'];
+            $labels = ['em_preparo'=>'Em preparo','pronto'=>'Pronto','pronto_entrega'=>'Pronto para entrega','aguardando_pagamento'=>'Aguardando pagamento','entregue'=>'Entregue','aberto'=>'Aberto'];
             $podeCancelItem = !in_array($pedido->status, ['pago','aguardando_pagamento','cancelado'])
                               && in_array(Auth::user()?->role, ['garcom','gerente']);
         @endphp

@@ -109,7 +109,7 @@ class Order extends Model
             'em_preparo'           => 'Em Preparo',
             'pronto'               => 'Pronto',
             'pronto_entrega'       => 'Pronto p/ Entregar',
-            'aguardando_pagamento' => 'Entregue',
+            'aguardando_pagamento' => 'Aguardando pagamento',
             'pago'                 => 'Pago',
             'cancelado'            => 'Cancelado',
             default                => ucfirst(str_replace('_', ' ', $this->status)),
