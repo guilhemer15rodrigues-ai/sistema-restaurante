@@ -748,7 +748,7 @@
                 <td class="td-mono td-primary">#{{ str_pad($pg->order_id,4,'0',STR_PAD_LEFT) }}</td>
                 <td style="color:var(--muted); font-size:12px">{{ $pg->created_at->format('H:i') }}</td>
                 <td>
-                    @php $metodoIcons = ['dinheiro'=>'💵','cartao_credito'=>'💳','cartao_debito'=>'💳','pix'=>'📱']; @endphp
+                    @php $metodoIcons = ['dinheiro'=>'💵','cartao_credito'=>'💳','cartao_debito'=>'💳','pix'=>'📱','vale'=>'🎫']; @endphp
                     {{ $metodoIcons[$pg->metodo] ?? '' }} {{ str_replace('_',' ',ucfirst($pg->metodo)) }}
                     @if($pg->metodo === 'cartao_credito' && ($pg->parcelas ?? 1) > 1)
                         <span class="method-installments">({{ $pg->parcelas }}x)</span>

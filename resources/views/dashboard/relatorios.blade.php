@@ -124,7 +124,7 @@
                 <div class="panel-title"><i class="fas fa-credit-card"></i> Forma de Pagamento</div>
             </div>
             @php
-                $metodoLabel = ['dinheiro'=>'💵 Dinheiro','cartao_credito'=>'💳 Crédito','cartao_debito'=>'💳 Débito','pix'=>'📱 Pix'];
+                $metodoLabel = ['dinheiro'=>'💵 Dinheiro','cartao_credito'=>'💳 Crédito','cartao_debito'=>'💳 Débito','pix'=>'📱 Pix','vale'=>'🎫 Vale'];
                 $totalMetodo = $porMetodo->sum('total') ?: 1;
             @endphp
             @forelse($porMetodo as $metodo => $dados)
@@ -254,7 +254,7 @@
             <td class="td-mono td-primary">#{{ str_pad($pg->order_id,4,'0',STR_PAD_LEFT) }}</td>
             <td style="color:var(--muted)">Mesa {{ $pg->order->table->numero ?? '—' }}</td>
             <td>
-                @php $mi=['dinheiro'=>'💵','cartao_credito'=>'💳','cartao_debito'=>'💳','pix'=>'📱']; @endphp
+                @php $mi=['dinheiro'=>'💵','cartao_credito'=>'💳','cartao_debito'=>'💳','pix'=>'📱','vale'=>'🎫']; @endphp
                 {{ $mi[$pg->metodo]??'' }} {{ ucfirst(str_replace('_',' ',$pg->metodo)) }}
             </td>
             <td class="td-mono" style="color:#4ade80;font-weight:700">R$ {{ number_format($pg->valor_final,2,',','.') }}</td>

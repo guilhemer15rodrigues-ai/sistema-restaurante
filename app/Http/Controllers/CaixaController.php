@@ -99,7 +99,7 @@ class CaixaController extends Controller
 
         try {
             $validated = request()->validate([
-                'metodo'      => 'required|in:dinheiro,cartao_credito,cartao_debito,pix',
+                'metodo'      => 'required|in:dinheiro,cartao_credito,cartao_debito,pix,vale',
                 'valor_pago'  => 'required|numeric|min:0.01',
                 'taxa_garcom' => 'nullable|boolean',
                 'parcelas'    => 'nullable|required_if:metodo,cartao_credito|integer|min:1|max:12',
@@ -206,7 +206,7 @@ class CaixaController extends Controller
         $comandasAbertas = $this->comandasAbertas();
         $valorPendente   = $comandasAbertas->sum('total');
 
-        $metodos = ['pix', 'cartao_credito', 'cartao_debito', 'dinheiro'];
+        $metodos = ['pix', 'cartao_credito', 'cartao_debito', 'dinheiro', 'vale'];
         $conciliacao = collect($metodos)->map(function ($metodo) use ($periodoInicio, $periodoFim) {
             $pagamentos = $this->pagamentosDoPeriodo($periodoInicio, $periodoFim)
                 ->where('metodo', $metodo);
@@ -329,7 +329,7 @@ class CaixaController extends Controller
 
         // Só mesas com conta fechada e aguardando pagamento.
         $mesas = Table::with([
-            'orders' => fn($q) => $q->where('status', 'aguardando_pagamento'),
+            'orders' => fn($q) => $q->where('status', 'aguardando_pagamento')->with('user', 'payments'),
         ])->get()->filter(fn($m) => $m->orders->isNotEmpty());
 
         return view('caixa.pagar-mesa', compact('mesas'));
@@ -363,6 +363,7 @@ class CaixaController extends Controller
         $pix = (float) ($totaisPorMetodo->get('pix')->total ?? 0);
         $debito = (float) ($totaisPorMetodo->get('cartao_debito')->total ?? 0);
         $credito = (float) ($totaisPorMetodo->get('cartao_credito')->total ?? 0);
+        $vale = (float) ($totaisPorMetodo->get('vale')->total ?? 0);
         $compras = (float) Purchase::whereBetween('created_at', [$inicio, $fim])
             ->where('status', 'recebido')
             ->sum('total');
@@ -373,7 +374,8 @@ class CaixaController extends Controller
             'pix'                   => round($pix, 2),
             'cartao_debito'         => round($debito, 2),
             'cartao_credito'        => round($credito, 2),
-            'total_vendido'         => round($dinheiro + $pix + $debito + $credito, 2),
+            'vale'                  => round($vale, 2),
+            'total_vendido'         => round($dinheiro + $pix + $debito + $credito + $vale, 2),
             'compras'               => round($compras, 2),
             'sangrias'              => round($sangrias, 2),
             'valor_esperado_caixa'  => round($dinheiro - $compras - $sangrias, 2),

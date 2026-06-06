@@ -183,7 +183,7 @@ class TableController extends Controller
         }
 
         $request->validate([
-            'metodo'       => 'required|in:dinheiro,cartao_credito,cartao_debito,pix',
+            'metodo'       => 'required|in:dinheiro,cartao_credito,cartao_debito,pix,vale',
             'valor_pago'   => 'required|numeric|min:0.01',
             'taxa_garcom'  => 'nullable|boolean',
             'parcelas'     => 'nullable|required_if:metodo,cartao_credito|integer|min:1|max:12',

@@ -117,6 +117,7 @@ tailwind.config = {
         'pix'             => ['icon'=>'📱','cor'=>'rgba(59,130,246,.12)','tx'=>'#60a5fa','label'=>'PIX'],
         'cartao_debito'   => ['icon'=>'💳','cor'=>'rgba(34,197,94,.12)','tx'=>'#4ade80','label'=>'Cartão Débito'],
         'cartao_credito'  => ['icon'=>'💳','cor'=>'rgba(168,85,247,.12)','tx'=>'#c084fc','label'=>'Cartão Crédito'],
+        'vale'            => ['icon'=>'🎫','cor'=>'rgba(250,178,105,.12)','tx'=>'#fab269','label'=>'Vale'],
         'dinheiro'        => ['icon'=>'💵','cor'=>'rgba(234,179,8,.12)','tx'=>'#facc15','label'=>'Dinheiro'],
       ];
     @endphp
@@ -175,7 +176,7 @@ tailwind.config = {
     <div style="margin-top:16px;">
       <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Distribuição por forma de pagamento</div>
       <div style="display:flex;height:10px;border-radius:100px;overflow:hidden;gap:2px;">
-        @php $cores = ['pix'=>'#3b82f6','cartao_debito'=>'#22c55e','cartao_credito'=>'#a855f7','dinheiro'=>'#eab308']; @endphp
+        @php $cores = ['pix'=>'#3b82f6','cartao_debito'=>'#22c55e','cartao_credito'=>'#a855f7','dinheiro'=>'#eab308','vale'=>'#fab269']; @endphp
         @foreach($conciliacao as $c)
           @if($c['total'] > 0)
           <div style="flex:{{ $c['total'] }};background:{{ $cores[$c['metodo']]??'var(--muted)' }};transition:flex .5s ease;" title="{{ ucfirst(str_replace('_',' ',$c['metodo'])) }}: R$ {{ number_format($c['total'],2,',','.') }}"></div>
