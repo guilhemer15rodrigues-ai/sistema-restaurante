@@ -1,98 +1,226 @@
 @extends('layouts.app')
-@section('page-title', 'Pagamento')
-@section('breadcrumb', 'Caixa - contas aguardando pagamento')
+@section('page-title', 'Checkout do Caixa')
+@section('breadcrumb', 'Pagamentos de mesas fechadas')
 
 @section('styles')
 <style>
-.pay-desk {
+.checkout-page {
     display: grid;
-    gap: 18px;
+    gap: 16px;
 }
 
-.pay-ticket {
+.checkout-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: end;
+    padding: 18px;
     border: 1px solid var(--border);
     border-radius: 16px;
+    background: var(--card-bg);
+}
+
+.checkout-kicker {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.checkout-title {
+    margin-top: 5px;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.checkout-subtitle {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.checkout-count {
+    min-width: 150px;
+    text-align: right;
+}
+
+.checkout-count span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.checkout-count strong {
+    display: block;
+    color: var(--accent);
+    font-family: monospace;
+    font-size: 34px;
+    line-height: 1;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.queue-panel {
+    position: sticky;
+    top: 82px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-bg);
+    padding: 12px;
+}
+
+.queue-title {
+    color: #fff;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.queue-list {
+    display: grid;
+    gap: 8px;
+}
+
+.queue-item {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg2);
+    padding: 10px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.queue-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(249,115,22,.14);
+    color: var(--accent);
+    font-weight: 900;
+}
+
+.queue-item strong {
+    display: block;
+    color: #fff;
+    font-size: 13px;
+}
+
+.queue-item span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.checkout-stack {
+    display: grid;
+    gap: 16px;
+}
+
+.checkout-card {
+    border: 1px solid var(--border);
+    border-radius: 18px;
     background: var(--card-bg);
     overflow: hidden;
 }
 
-.pay-head {
+.ticket-hero {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 18px;
+    gap: 16px;
     align-items: center;
     padding: 18px;
+    background:
+        linear-gradient(135deg, rgba(249,115,22,.16), transparent 58%),
+        var(--bg2);
     border-bottom: 1px solid var(--border);
-    background: linear-gradient(135deg, rgba(249,115,22,.12), rgba(250,178,105,.04));
 }
 
-.pay-title {
+.ticket-table {
     color: #fff;
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 900;
     line-height: 1;
 }
 
-.pay-meta {
+.ticket-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 14px;
-    margin-top: 8px;
+    gap: 8px 12px;
+    margin-top: 9px;
     color: var(--muted);
     font-size: 12px;
 }
 
-.pay-meta strong {
+.ticket-meta strong {
     color: var(--cream);
 }
 
-.pay-total-box {
+.ticket-total {
     text-align: right;
-    min-width: 190px;
 }
 
-.pay-total-box span {
+.ticket-total span {
     display: block;
     color: var(--muted);
     font-size: 11px;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: .5px;
 }
 
-.pay-total-box strong {
+.ticket-total strong {
+    display: block;
     color: var(--accent);
     font-family: monospace;
-    font-size: 34px;
-    line-height: 1.1;
+    font-size: 38px;
+    line-height: 1.05;
 }
 
-.pay-body {
+.checkout-body {
     display: grid;
-    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    grid-template-columns: minmax(240px, 330px) minmax(0, 1fr);
     gap: 16px;
-    padding: 18px;
+    padding: 16px;
 }
 
-.pay-summary,
-.pay-panel,
-.pay-finance {
+.receipt-panel,
+.method-panel,
+.flow-panel,
+.finance-strip {
     border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--bg2);
+}
+
+.receipt-panel {
     padding: 14px;
 }
 
-.pay-section-title {
+.block-title {
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
-    margin-bottom: 12px;
     text-transform: uppercase;
-    letter-spacing: .4px;
+    letter-spacing: .6px;
+    margin-bottom: 12px;
 }
 
-.pay-line {
+.receipt-line {
     display: flex;
     justify-content: space-between;
     gap: 12px;
@@ -102,33 +230,43 @@
     font-size: 13px;
 }
 
-.pay-line:last-child {
+.receipt-line:last-child {
     border-bottom: 0;
 }
 
-.pay-line strong {
+.receipt-line strong {
     color: var(--cream);
     font-family: monospace;
 }
 
-.pay-line.final strong {
+.receipt-line.total {
+    margin-top: 6px;
+    padding-top: 13px;
+    border-top: 1px solid rgba(249,115,22,.28);
+}
+
+.receipt-line.total strong {
     color: var(--accent);
-    font-size: 18px;
+    font-size: 20px;
 }
 
-.pay-main {
+.checkout-main {
     display: grid;
-    gap: 14px;
+    gap: 12px;
 }
 
-.method-grid {
+.method-panel {
+    padding: 12px;
+}
+
+.method-bar {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
 }
 
-.method-btn {
-    min-height: 48px;
+.pay-method {
+    min-height: 50px;
     border: 1px solid var(--border);
     border-radius: 12px;
     background: var(--bg);
@@ -138,14 +276,14 @@
     transition: .18s ease;
 }
 
-.method-btn:hover,
-.method-btn.active {
+.pay-method:hover,
+.pay-method.active {
     border-color: var(--accent);
-    background: rgba(249,115,22,.14);
+    background: rgba(249,115,22,.15);
     transform: translateY(-1px);
 }
 
-.switch-line {
+.service-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -153,65 +291,71 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--bg2);
-    padding: 12px 14px;
+    padding: 12px;
     cursor: pointer;
 }
 
-.switch-line input {
+.service-row input {
     display: none;
 }
 
-.pay-switch {
-    width: 56px;
+.service-row strong {
+    color: #fff;
+}
+
+.service-row small {
+    display: block;
+    margin-top: 2px;
+    color: var(--muted);
+}
+
+.service-toggle {
+    width: 58px;
     height: 30px;
     border-radius: 999px;
     background: #374151;
     position: relative;
     flex: 0 0 auto;
-    transition: .18s;
+    transition: .18s ease;
 }
 
-.pay-switch::after {
+.service-toggle::after {
     content: "";
+    position: absolute;
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: #fff;
-    position: absolute;
     top: 4px;
     left: 4px;
-    transition: .18s;
+    background: white;
+    transition: .18s ease;
 }
 
-.switch-line input:checked + .pay-switch {
+.service-row input:checked + .service-toggle {
     background: var(--accent);
 }
 
-.switch-line input:checked + .pay-switch::after {
-    transform: translateX(26px);
+.service-row input:checked + .service-toggle::after {
+    transform: translateX(28px);
 }
 
-.pay-flow {
+.flow-panel {
     display: none;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--bg2);
     padding: 14px;
 }
 
-.pay-flow.active {
+.flow-panel.active {
     display: block;
 }
 
-.pix-grid {
+.pix-layout {
     display: grid;
-    grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+    grid-template-columns: 210px minmax(0, 1fr);
     gap: 14px;
-    align-items: stretch;
 }
 
-.pix-left,
-.pix-right {
+.pix-box,
+.pix-confirm {
     border: 1px solid rgba(59,130,246,.22);
     border-radius: 12px;
     background: rgba(59,130,246,.06);
@@ -220,48 +364,35 @@
 
 .pix-qr {
     display: block;
-    width: 170px;
+    width: 160px;
     max-width: 100%;
     aspect-ratio: 1;
     height: auto;
     margin: 0 auto 10px;
     padding: 8px;
     border-radius: 12px;
-    background: #fff;
+    background: white;
 }
 
 .pix-code {
-    max-height: 64px;
-    overflow: auto;
-    word-break: break-all;
     color: var(--muted);
     font-size: 10px;
-    line-height: 1.45;
+    line-height: 1.4;
+    max-height: 60px;
+    overflow: auto;
+    word-break: break-all;
 }
 
-.copy-btn,
-.cash-chip {
+.copy-pix,
+.money-chip {
+    min-height: 38px;
     border: 1px solid var(--border);
     border-radius: 10px;
     background: var(--bg);
     color: var(--cream);
-    min-height: 38px;
-    padding: 0 12px;
-    cursor: pointer;
     font-weight: 800;
-}
-
-.pix-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    padding: 8px 10px;
-    border-radius: 999px;
-    background: rgba(234,179,8,.12);
-    color: #fde047;
-    font-size: 12px;
-    font-weight: 900;
+    cursor: pointer;
+    padding: 0 12px;
 }
 
 .pay-input,
@@ -276,34 +407,41 @@
     font-size: 15px;
 }
 
-.installment-info,
-.cash-change {
-    margin-top: 10px;
+.flow-note {
     color: var(--muted);
     font-size: 13px;
+    margin-top: 10px;
 }
 
-.cash-chips {
+.money-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: end;
+}
+
+.money-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 10px;
 }
 
-.pay-finance {
+.finance-strip {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+    padding: 10px;
 }
 
-.finance-cell {
+.finance-box {
     border: 1px solid var(--border);
     border-radius: 12px;
     background: var(--bg);
     padding: 10px;
 }
 
-.finance-cell span {
+.finance-box span {
     display: block;
     color: var(--muted);
     font-size: 11px;
@@ -311,7 +449,7 @@
     text-transform: uppercase;
 }
 
-.finance-cell strong {
+.finance-box strong {
     display: block;
     color: #fff;
     margin-top: 4px;
@@ -319,17 +457,17 @@
     font-size: 18px;
 }
 
-.pay-actions {
+.submit-zone {
     position: sticky;
     bottom: 0;
-    z-index: 5;
-    padding-top: 6px;
-    background: linear-gradient(180deg, transparent, var(--bg) 35%);
+    z-index: 6;
+    padding-top: 8px;
+    background: linear-gradient(180deg, transparent, var(--bg) 38%);
 }
 
-.pay-submit {
+.checkout-submit {
     width: 100%;
-    min-height: 54px;
+    min-height: 56px;
     border: 0;
     border-radius: 14px;
     background: linear-gradient(135deg, #f97316, #fb923c);
@@ -340,231 +478,283 @@
     transition: .18s ease;
 }
 
-.pay-submit:hover {
+.checkout-submit:hover {
     filter: brightness(1.05);
     transform: translateY(-1px);
 }
 
-.pay-submit.is-loading {
-    opacity: .72;
+.checkout-submit.loading {
+    opacity: .7;
     cursor: wait;
 }
 
-.empty-payment {
-    grid-column: 1 / -1;
-}
-
-@media (max-width: 980px) {
-    .pay-body,
-    .pay-head,
-    .pix-grid {
+@media (max-width: 1100px) {
+    .checkout-grid,
+    .checkout-body,
+    .checkout-top,
+    .ticket-hero,
+    .pix-layout {
         grid-template-columns: 1fr;
     }
 
-    .pay-total-box {
-        text-align: left;
+    .queue-panel {
+        position: static;
     }
 
-    .method-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .queue-list {
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    }
+
+    .ticket-total,
+    .checkout-count {
+        text-align: left;
     }
 }
 
-@media (max-width: 640px) {
-    .pay-ticket {
-        border-radius: 12px;
-    }
-
-    .pay-head,
-    .pay-body {
+@media (max-width: 680px) {
+    .checkout-top,
+    .ticket-hero,
+    .checkout-body {
         padding: 14px;
     }
 
-    .pay-total-box strong {
-        font-size: 30px;
+    .method-bar,
+    .finance-strip,
+    .money-grid {
+        grid-template-columns: 1fr;
     }
 
-    .pay-finance {
-        grid-template-columns: 1fr;
+    .ticket-total strong {
+        font-size: 32px;
     }
 }
 </style>
 @endsection
 
 @section('content')
-<div class="pay-desk">
-    @forelse($mesas as $mesa)
-        @foreach($mesa->orders as $p)
-            @php
-                $subtotal = (float) $p->total;
-                $totalPago = (float) $p->payments()->where('status', 'confirmado')->sum('valor_final');
-                $taxaAtual = (float) $p->payments()->where('status', 'confirmado')->sum('taxa');
-                $saldo = max(0, $subtotal + $taxaAtual - $totalPago);
-                $totalInicial = $saldo > 0 ? $saldo : $subtotal;
-                $garcom = $p->user?->name ?? 'Nao informado';
-                $abertura = $p->created_at?->format('H:i') ?? '-';
-            @endphp
+@php
+    $totalPedidosPendentes = $mesas->sum(fn($mesa) => $mesa->orders->count());
+@endphp
 
-            <form method="POST"
-                  action="{{ route('caixa.pagamento', $p) }}"
-                  class="pagamento-form pay-ticket"
-                  data-base-total="{{ number_format($subtotal, 2, '.', '') }}"
-                  data-total="{{ number_format($totalInicial, 2, '.', '') }}"
-                  data-existing-fee="{{ number_format($taxaAtual, 2, '.', '') }}"
-                  data-taxa-aplicada="{{ $taxaAtual > 0 ? 1 : 0 }}"
-                  data-pedido="{{ str_pad($p->id,4,'0',STR_PAD_LEFT) }}"
-                  data-pix-payload="{{ e(\App\Support\PixPayload::make((float) $totalInicial, 'PED' . str_pad($p->id,4,'0',STR_PAD_LEFT))) }}">
-                @csrf
+<div class="checkout-page">
+    <section class="checkout-top">
+        <div>
+            <div class="checkout-kicker">Terminal de pagamento</div>
+            <div class="checkout-title">Checkout do caixa</div>
+            <div class="checkout-subtitle">Escolha uma conta, confirme o metodo e finalize em poucos toques.</div>
+        </div>
+        <div class="checkout-count">
+            <span>Na fila</span>
+            <strong>{{ $totalPedidosPendentes }}</strong>
+        </div>
+    </section>
 
-                <input type="hidden" name="metodo" class="js-metodo-pagamento" value="pix">
-                <input type="hidden" name="valor_pago" class="js-valor-pago" value="{{ number_format($totalInicial, 2, '.', '') }}">
-
-                <div class="pay-head">
-                    <div>
-                        <div class="pay-title">Mesa {{ $mesa->numero }}</div>
-                        <div class="pay-meta">
-                            <span>Pedido <strong>#{{ str_pad($p->id,4,'0',STR_PAD_LEFT) }}</strong></span>
-                            <span>Garcom <strong>{{ $garcom }}</strong></span>
-                            <span>Abertura <strong>{{ $abertura }}</strong></span>
-                        </div>
-                    </div>
-                    <div class="pay-total-box">
-                        <span>Total da conta</span>
-                        <strong class="js-total-final">R$ {{ number_format($totalInicial,2,',','.') }}</strong>
-                    </div>
-                </div>
-
-                <div class="pay-body">
-                    <aside class="pay-summary">
-                        <div class="pay-section-title">Resumo da conta</div>
-                        <div class="pay-line"><span>Subtotal</span><strong class="js-subtotal">R$ {{ number_format($subtotal,2,',','.') }}</strong></div>
-                        <div class="pay-line"><span>Taxa de servico</span><strong class="js-service-fee">R$ {{ number_format($taxaAtual,2,',','.') }}</strong></div>
-                        <div class="pay-line"><span>Desconto</span><strong>R$ 0,00</strong></div>
-                        @if($totalPago > 0)
-                        <div class="pay-line"><span>Pago</span><strong>R$ {{ number_format($totalPago,2,',','.') }}</strong></div>
-                        @endif
-                        <div class="pay-line final"><span>Total final</span><strong class="js-summary-total">R$ {{ number_format($totalInicial,2,',','.') }}</strong></div>
-                    </aside>
-
-                    <div class="pay-main">
-                        <section class="pay-panel">
-                            <div class="pay-section-title">Forma de pagamento</div>
-                            <div class="method-grid">
-                                <button type="button" class="method-btn active" data-method="pix">PIX</button>
-                                <button type="button" class="method-btn" data-method="cartao_credito">Credito</button>
-                                <button type="button" class="method-btn" data-method="cartao_debito">Debito</button>
-                                <button type="button" class="method-btn" data-method="dinheiro">Dinheiro</button>
-                                <button type="button" class="method-btn" data-method="vale">Vale</button>
-                            </div>
-                        </section>
-
-                        <label class="switch-line">
-                            <span>
-                                <strong style="display:block;color:#fff">Adicionar 10% do Garcom</strong>
-                                <small style="color:var(--muted)">Atualiza o total automaticamente</small>
-                            </span>
-                            <input type="checkbox" name="taxa_garcom" value="1" class="js-service-toggle" {{ $taxaAtual > 0 ? 'checked disabled' : '' }}>
-                            <span class="pay-switch"></span>
-                        </label>
-
-                        <section class="pay-flow js-flow active" data-flow="pix">
-                            <div class="pix-grid">
-                                <div class="pix-left">
-                                    <img class="pix-qr js-pix-qr" alt="QR Code PIX">
-                                    <div class="pix-code js-pix-code"></div>
-                                    <button type="button" class="copy-btn js-copy-pix" style="margin-top:10px;width:100%">
-                                        <i class="fas fa-copy"></i> Copiar Chave
-                                    </button>
-                                </div>
-                                <div class="pix-right">
-                                    <div class="pay-section-title">PIX</div>
-                                    <div class="pay-line final"><span>Total</span><strong class="js-pix-total">R$ {{ number_format($totalInicial,2,',','.') }}</strong></div>
-                                    <div class="pix-status"><i class="fas fa-clock"></i> Aguardando pagamento</div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section class="pay-flow js-flow" data-flow="cartao_credito">
-                            <div class="pay-section-title">Credito</div>
-                            <label style="display:block;color:var(--muted);font-size:12px;margin-bottom:8px">Parcelamento</label>
-                            <select name="parcelas" class="pay-select js-parcelas">
-                                @for($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}">{{ $i }}x</option>
-                                @endfor
-                            </select>
-                            <div class="installment-info js-parcela-info">1x de R$ {{ number_format($totalInicial,2,',','.') }} sem juros</div>
-                        </section>
-
-                        <section class="pay-flow js-flow" data-flow="cartao_debito">
-                            <div class="pay-section-title">Debito</div>
-                            <div class="pay-line final"><span>Total no debito</span><strong class="js-debit-total">R$ {{ number_format($totalInicial,2,',','.') }}</strong></div>
-                        </section>
-
-                        <section class="pay-flow js-flow" data-flow="dinheiro">
-                            <div class="pay-section-title">Dinheiro</div>
-                            <label style="display:block;color:var(--muted);font-size:12px;margin-bottom:8px">Valor recebido</label>
-                            <input type="number" min="0" step="0.01" inputmode="decimal" class="pay-input js-cash-received" value="{{ number_format($totalInicial,2,'.','') }}">
-                            <div class="cash-chips">
-                                <button type="button" class="cash-chip" data-add="10">+10</button>
-                                <button type="button" class="cash-chip" data-add="20">+20</button>
-                                <button type="button" class="cash-chip" data-add="50">+50</button>
-                                <button type="button" class="cash-chip" data-exact="1">Valor Exato</button>
-                            </div>
-                            <div class="cash-change">Troco: <strong class="js-change">R$ 0,00</strong></div>
-                        </section>
-
-                        <section class="pay-flow js-flow" data-flow="vale">
-                            <div class="pay-section-title">Vale</div>
-                            <div class="pay-line final"><span>Total no vale</span><strong class="js-voucher-total">R$ {{ number_format($totalInicial,2,',','.') }}</strong></div>
-                        </section>
-
-                        <section class="pay-finance">
-                            <div class="finance-cell">
-                                <span>Recebido</span>
-                                <strong class="js-received">R$ {{ number_format($totalInicial,2,',','.') }}</strong>
-                            </div>
-                            <div class="finance-cell">
-                                <span>Total</span>
-                                <strong class="js-finance-total">R$ {{ number_format($totalInicial,2,',','.') }}</strong>
-                            </div>
-                            <div class="finance-cell">
-                                <span>Troco</span>
-                                <strong class="js-finance-change">R$ 0,00</strong>
-                            </div>
-                        </section>
-
-                        <div class="pay-actions">
-                            <button type="submit" class="pay-submit">
-                                <i class="fas fa-check-circle"></i> Confirmar Pagamento
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        @endforeach
-    @empty
-        <div class="empty-state empty-payment">
+    @if($mesas->isEmpty())
+        <div class="empty-state">
             <i class="fas fa-cash-register"></i>
             <p>Nenhuma mesa aguardando pagamento</p>
         </div>
-    @endforelse
+    @else
+    <div class="checkout-grid">
+        <aside class="queue-panel">
+            <div class="queue-title">Fila de contas</div>
+            <div class="queue-list">
+                @foreach($mesas as $mesa)
+                    @foreach($mesa->orders as $p)
+                        @php
+                            $subtotalFila = (float) $p->total;
+                            $totalPagoFila = (float) $p->payments->where('status', 'confirmado')->sum('valor_final');
+                            $taxaFila = (float) $p->payments->where('status', 'confirmado')->sum('taxa');
+                            $saldoFila = max(0, $subtotalFila + $taxaFila - $totalPagoFila);
+                        @endphp
+                        <a href="#pay-{{ $p->id }}" class="queue-item">
+                            <div class="queue-num">{{ $mesa->numero }}</div>
+                            <div>
+                                <strong>Pedido #{{ str_pad($p->id, 4, '0', STR_PAD_LEFT) }}</strong>
+                                <span>R$ {{ number_format($saldoFila > 0 ? $saldoFila : $subtotalFila, 2, ',', '.') }}</span>
+                            </div>
+                        </a>
+                    @endforeach
+                @endforeach
+            </div>
+        </aside>
+
+        <div class="checkout-stack">
+            @foreach($mesas as $mesa)
+                @foreach($mesa->orders as $p)
+                    @php
+                        $subtotal = (float) $p->total;
+                        $totalPago = (float) $p->payments->where('status', 'confirmado')->sum('valor_final');
+                        $taxaAtual = (float) $p->payments->where('status', 'confirmado')->sum('taxa');
+                        $saldo = max(0, $subtotal + $taxaAtual - $totalPago);
+                        $totalInicial = $saldo > 0 ? $saldo : $subtotal;
+                        $garcom = $p->user?->name ?? 'Nao informado';
+                        $abertura = $p->created_at?->format('H:i') ?? '-';
+                    @endphp
+
+                    <form id="pay-{{ $p->id }}"
+                          method="POST"
+                          action="{{ route('caixa.pagamento', $p) }}"
+                          class="checkout-card js-checkout-form"
+                          data-base-total="{{ number_format($subtotal, 2, '.', '') }}"
+                          data-total="{{ number_format($totalInicial, 2, '.', '') }}"
+                          data-existing-fee="{{ number_format($taxaAtual, 2, '.', '') }}"
+                          data-taxa-aplicada="{{ $taxaAtual > 0 ? 1 : 0 }}"
+                          data-pix-payload="{{ e(\App\Support\PixPayload::make((float) $totalInicial, 'PED' . str_pad($p->id,4,'0',STR_PAD_LEFT))) }}">
+                        @csrf
+                        <input type="hidden" name="metodo" class="js-method-input" value="pix">
+                        <input type="hidden" name="valor_pago" class="js-paid-input" value="{{ number_format($totalInicial, 2, '.', '') }}">
+
+                        <div class="ticket-hero">
+                            <div>
+                                <div class="ticket-table">Mesa {{ $mesa->numero }}</div>
+                                <div class="ticket-meta">
+                                    <span>Pedido <strong>#{{ str_pad($p->id, 4, '0', STR_PAD_LEFT) }}</strong></span>
+                                    <span>Garcom <strong>{{ $garcom }}</strong></span>
+                                    <span>Abertura <strong>{{ $abertura }}</strong></span>
+                                </div>
+                            </div>
+                            <div class="ticket-total">
+                                <span>Total da conta</span>
+                                <strong class="js-grand-total">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="checkout-body">
+                            <aside class="receipt-panel">
+                                <div class="block-title">Resumo</div>
+                                <div class="receipt-line"><span>Subtotal</span><strong>R$ {{ number_format($subtotal, 2, ',', '.') }}</strong></div>
+                                <div class="receipt-line"><span>Servico</span><strong class="js-fee-label">R$ {{ number_format($taxaAtual, 2, ',', '.') }}</strong></div>
+                                <div class="receipt-line"><span>Desconto</span><strong>R$ 0,00</strong></div>
+                                @if($totalPago > 0)
+                                <div class="receipt-line"><span>Pago</span><strong style="color:#4ade80">R$ {{ number_format($totalPago, 2, ',', '.') }}</strong></div>
+                                @endif
+                                <div class="receipt-line total"><span>Total final</span><strong class="js-total-label">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong></div>
+                            </aside>
+
+                            <div class="checkout-main">
+                                <section class="method-panel">
+                                    <div class="block-title">Pagamento</div>
+                                    <div class="method-bar">
+                                        <button type="button" class="pay-method active" data-method="pix">PIX</button>
+                                        <button type="button" class="pay-method" data-method="cartao_credito">Credito</button>
+                                        <button type="button" class="pay-method" data-method="cartao_debito">Debito</button>
+                                        <button type="button" class="pay-method" data-method="dinheiro">Dinheiro</button>
+                                        <button type="button" class="pay-method" data-method="vale">Vale</button>
+                                    </div>
+                                </section>
+
+                                <label class="service-row">
+                                    <span>
+                                        <strong>Adicionar 10% do garcom</strong>
+                                        <small>{{ $taxaAtual > 0 ? 'Taxa ja aplicada neste pedido' : 'Opcional no fechamento do caixa' }}</small>
+                                    </span>
+                                    <input type="checkbox" name="taxa_garcom" value="1" class="js-fee-toggle" {{ $taxaAtual > 0 ? 'checked disabled' : '' }}>
+                                    <span class="service-toggle"></span>
+                                </label>
+
+                                <section class="flow-panel active" data-flow="pix">
+                                    <div class="pix-layout">
+                                        <div class="pix-box">
+                                            <img class="pix-qr js-pix-qr" alt="QR Code PIX">
+                                            <div class="pix-code js-pix-code"></div>
+                                            <button type="button" class="copy-pix js-copy-pix" style="width:100%;margin-top:10px">
+                                                <i class="fas fa-copy"></i> Copiar chave
+                                            </button>
+                                        </div>
+                                        <div class="pix-confirm">
+                                            <div class="block-title">Confirmacao PIX</div>
+                                            <div class="receipt-line total"><span>Total</span><strong class="js-pix-total">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong></div>
+                                            <div class="flow-note"><i class="fas fa-clock"></i> Aguardando confirmacao no aplicativo do cliente.</div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="flow-panel" data-flow="cartao_credito">
+                                    <div class="block-title">Credito</div>
+                                    <select name="parcelas" class="pay-select js-installments">
+                                        @for($i = 1; $i <= 12; $i++)
+                                            <option value="{{ $i }}">{{ $i }}x</option>
+                                        @endfor
+                                    </select>
+                                    <div class="flow-note js-installment-label">1x de R$ {{ number_format($totalInicial, 2, ',', '.') }} sem juros</div>
+                                </section>
+
+                                <section class="flow-panel" data-flow="cartao_debito">
+                                    <div class="block-title">Debito</div>
+                                    <div class="receipt-line total"><span>Total</span><strong class="js-debit-total">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong></div>
+                                    <div class="flow-note">Aproxime ou insira o cartao na maquininha.</div>
+                                </section>
+
+                                <section class="flow-panel" data-flow="dinheiro">
+                                    <div class="block-title">Dinheiro</div>
+                                    <div class="money-grid">
+                                        <div>
+                                            <label style="display:block;color:var(--muted);font-size:12px;margin-bottom:8px">Valor recebido</label>
+                                            <input type="number" min="0" step="0.01" inputmode="decimal" class="pay-input js-cash-input" value="{{ number_format($totalInicial, 2, '.', '') }}">
+                                        </div>
+                                        <button type="button" class="money-chip js-exact-money">Valor exato</button>
+                                    </div>
+                                    <div class="money-chips">
+                                        <button type="button" class="money-chip" data-add="10">+10</button>
+                                        <button type="button" class="money-chip" data-add="20">+20</button>
+                                        <button type="button" class="money-chip" data-add="50">+50</button>
+                                        <button type="button" class="money-chip" data-add="100">+100</button>
+                                    </div>
+                                </section>
+
+                                <section class="flow-panel" data-flow="vale">
+                                    <div class="block-title">Vale</div>
+                                    <div class="receipt-line total"><span>Total</span><strong class="js-voucher-total">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong></div>
+                                    <div class="flow-note">Confirme o comprovante do vale antes de finalizar.</div>
+                                </section>
+
+                                <section class="finance-strip">
+                                    <div class="finance-box">
+                                        <span>Recebido</span>
+                                        <strong class="js-received-label">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong>
+                                    </div>
+                                    <div class="finance-box">
+                                        <span>Total</span>
+                                        <strong class="js-finance-total">R$ {{ number_format($totalInicial, 2, ',', '.') }}</strong>
+                                    </div>
+                                    <div class="finance-box">
+                                        <span>Troco</span>
+                                        <strong class="js-change-label">R$ 0,00</strong>
+                                    </div>
+                                </section>
+
+                                <div class="submit-zone">
+                                    <button type="submit" class="checkout-submit">
+                                        <i class="fas fa-check-circle"></i> Confirmar pagamento
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                @endforeach
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
 
 @section('scripts')
 <script>
-document.querySelectorAll('.pagamento-form').forEach((form) => {
-    const metodoInput = form.querySelector('.js-metodo-pagamento');
-    const valueInput = form.querySelector('.js-valor-pago');
-    const methodButtons = form.querySelectorAll('.method-btn');
-    const flows = form.querySelectorAll('.js-flow');
-    const serviceToggle = form.querySelector('.js-service-toggle');
-    const parcelas = form.querySelector('.js-parcelas');
-    const cashInput = form.querySelector('.js-cash-received');
+document.querySelectorAll('.js-checkout-form').forEach((form) => {
+    const methodInput = form.querySelector('.js-method-input');
+    const paidInput = form.querySelector('.js-paid-input');
+    const methodButtons = form.querySelectorAll('.pay-method');
+    const flows = form.querySelectorAll('.flow-panel');
+    const feeToggle = form.querySelector('.js-fee-toggle');
+    const installments = form.querySelector('.js-installments');
+    const cashInput = form.querySelector('.js-cash-input');
+    const exactMoney = form.querySelector('.js-exact-money');
     const pixQr = form.querySelector('.js-pix-qr');
     const pixCode = form.querySelector('.js-pix-code');
     const copyPix = form.querySelector('.js-copy-pix');
-    const submit = form.querySelector('.pay-submit');
+    const submit = form.querySelector('.checkout-submit');
     const baseTotal = Number(form.dataset.baseTotal || 0);
     const currentTotal = Number(form.dataset.total || baseTotal);
     const existingFee = Number(form.dataset.existingFee || 0);
@@ -576,83 +766,80 @@ document.querySelectorAll('.pagamento-form').forEach((form) => {
         currency: 'BRL'
     });
 
-    const getTotal = () => {
-        const service = serviceToggle?.checked && !alreadyTaxed ? baseTotal * 0.10 : 0;
-        return Number((currentTotal + service).toFixed(2));
+    const total = () => {
+        const extraFee = feeToggle?.checked && !alreadyTaxed ? baseTotal * 0.10 : 0;
+        return Number((currentTotal + extraFee).toFixed(2));
     };
 
-    const setText = (selector, value) => {
+    const write = (selector, value) => {
         const el = form.querySelector(selector);
         if (el) el.textContent = money(value);
     };
 
     const updatePix = () => {
-        const payload = serviceToggle?.checked && !alreadyTaxed ? '' : originalPixPayload;
-        pixCode.textContent = payload || 'PIX sera confirmado pelo caixa no valor atualizado.';
+        const payload = feeToggle?.checked && !alreadyTaxed ? '' : originalPixPayload;
+        pixCode.textContent = payload || 'PIX no valor atualizado sera confirmado pelo caixa.';
         pixQr.style.display = payload ? 'block' : 'none';
         pixQr.src = payload ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(payload)}` : '';
     };
 
-    const updateParcelas = () => {
-        const total = getTotal();
-        const qtd = Number(parcelas?.value || 1);
-        const info = form.querySelector('.js-parcela-info');
-        if (info) info.textContent = `${qtd}x de ${money(total / qtd)} sem juros`;
+    const updateInstallments = () => {
+        const qty = Number(installments?.value || 1);
+        const label = form.querySelector('.js-installment-label');
+        if (label) label.textContent = `${qty}x de ${money(total() / qty)} sem juros`;
     };
 
-    const updateFinance = () => {
-        const total = getTotal();
-        const method = metodoInput.value;
-        const received = method === 'dinheiro' ? Number(cashInput?.value || 0) : total;
-        const change = method === 'dinheiro' ? Math.max(0, received - total) : 0;
-        const paidValue = method === 'dinheiro' ? Math.min(received, total) : total;
+    const updateMoney = () => {
+        const method = methodInput.value;
+        const totalValue = total();
+        const received = method === 'dinheiro' ? Number(cashInput?.value || 0) : totalValue;
+        const change = method === 'dinheiro' ? Math.max(0, received - totalValue) : 0;
+        const paid = method === 'dinheiro' ? Math.min(received, totalValue) : totalValue;
+        const extraFee = feeToggle?.checked && !alreadyTaxed ? baseTotal * 0.10 : 0;
 
-        valueInput.value = paidValue.toFixed(2);
-        setText('.js-total-final', total);
-        setText('.js-summary-total', total);
-        setText('.js-pix-total', total);
-        setText('.js-debit-total', total);
-        setText('.js-voucher-total', total);
-        setText('.js-finance-total', total);
-        setText('.js-received', received);
-        setText('.js-change', change);
-        setText('.js-finance-change', change);
+        paidInput.value = paid.toFixed(2);
+        write('.js-grand-total', totalValue);
+        write('.js-total-label', totalValue);
+        write('.js-pix-total', totalValue);
+        write('.js-debit-total', totalValue);
+        write('.js-voucher-total', totalValue);
+        write('.js-finance-total', totalValue);
+        write('.js-received-label', received);
+        write('.js-change-label', change);
+        write('.js-fee-label', existingFee + extraFee);
 
-        const service = serviceToggle?.checked && !alreadyTaxed ? baseTotal * 0.10 : 0;
-        setText('.js-service-fee', existingFee + service);
-
-        updateParcelas();
+        updateInstallments();
         updatePix();
     };
 
     const setMethod = (method) => {
-        metodoInput.value = method;
-        methodButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.method === method));
+        methodInput.value = method;
+        methodButtons.forEach((button) => button.classList.toggle('active', button.dataset.method === method));
         flows.forEach((flow) => flow.classList.toggle('active', flow.dataset.flow === method));
-        updateFinance();
+        updateMoney();
     };
 
     methodButtons.forEach((button) => {
         button.addEventListener('click', () => setMethod(button.dataset.method));
     });
 
-    serviceToggle?.addEventListener('change', () => {
-        if (cashInput) cashInput.value = getTotal().toFixed(2);
-        updateFinance();
+    feeToggle?.addEventListener('change', () => {
+        if (cashInput) cashInput.value = total().toFixed(2);
+        updateMoney();
     });
 
-    parcelas?.addEventListener('change', updateParcelas);
-    cashInput?.addEventListener('input', updateFinance);
+    installments?.addEventListener('change', updateInstallments);
+    cashInput?.addEventListener('input', updateMoney);
 
-    form.querySelectorAll('.cash-chip').forEach((button) => {
+    exactMoney?.addEventListener('click', () => {
+        cashInput.value = total().toFixed(2);
+        updateMoney();
+    });
+
+    form.querySelectorAll('.money-chip[data-add]').forEach((button) => {
         button.addEventListener('click', () => {
-            const total = getTotal();
-            if (button.dataset.exact) {
-                cashInput.value = total.toFixed(2);
-            } else {
-                cashInput.value = (Number(cashInput.value || 0) + Number(button.dataset.add || 0)).toFixed(2);
-            }
-            updateFinance();
+            cashInput.value = (Number(cashInput.value || 0) + Number(button.dataset.add || 0)).toFixed(2);
+            updateMoney();
         });
     });
 
@@ -660,14 +847,14 @@ document.querySelectorAll('.pagamento-form').forEach((form) => {
         try {
             await navigator.clipboard.writeText(pixCode.textContent || '');
             copyPix.textContent = 'Copiado';
-            setTimeout(() => copyPix.innerHTML = '<i class="fas fa-copy"></i> Copiar Chave', 1500);
+            setTimeout(() => copyPix.innerHTML = '<i class="fas fa-copy"></i> Copiar chave', 1400);
         } catch (error) {
             alert('Nao foi possivel copiar a chave PIX.');
         }
     });
 
     form.addEventListener('submit', () => {
-        submit.classList.add('is-loading');
+        submit.classList.add('loading');
         submit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
     });
 
