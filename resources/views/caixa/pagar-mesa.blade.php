@@ -350,16 +350,27 @@
 
 .pix-layout {
     display: grid;
-    grid-template-columns: 210px minmax(0, 1fr);
-    gap: 14px;
+    grid-template-columns: minmax(170px, 220px) minmax(240px, 1fr);
+    gap: 12px;
+    align-items: stretch;
 }
 
 .pix-box,
 .pix-confirm {
+    min-width: 0;
     border: 1px solid rgba(59,130,246,.22);
     border-radius: 12px;
     background: rgba(59,130,246,.06);
     padding: 12px;
+}
+
+.pix-confirm .receipt-line {
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.pix-confirm .receipt-line strong {
+    overflow-wrap: anywhere;
 }
 
 .pix-qr {
@@ -411,6 +422,7 @@
     color: var(--muted);
     font-size: 13px;
     margin-top: 10px;
+    overflow-wrap: anywhere;
 }
 
 .money-grid {
@@ -508,6 +520,16 @@
     .ticket-total,
     .checkout-count {
         text-align: left;
+    }
+}
+
+@media (max-width: 1280px) {
+    .pix-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pix-qr {
+        width: min(180px, 100%);
     }
 }
 
