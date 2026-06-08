@@ -491,8 +491,9 @@
             @foreach($tiposUnicos as $tipo)
             @php
                 $tipoLabels = [
-                    'prato_principal' => ['emoji' => '🥘', 'label' => 'Prato Principal'],
+                    'prato_principal' => ['emoji' => '🥘', 'label' => 'Pratos Principais'],
                     'entrada'         => ['emoji' => '🥗', 'label' => 'Entrada'],
+                    'acompanhamento'  => ['emoji' => '🍚', 'label' => 'Acompanhamento'],
                     'sobremesa'       => ['emoji' => '🍮', 'label' => 'Sobremesa'],
                     'bebida'          => ['emoji' => '🥤', 'label' => 'Bebida'],
                 ];
