@@ -301,7 +301,7 @@ Mesa {{ $mesa->numero }} — Conta
         <h2 style="font-size:22px; font-weight:800; color:#fff; margin:0">
             🪑 Mesa {{ $mesa->numero }}
             @if($contaFechada)
-            <span class="badge badge-warning" style="font-size:13px; margin-left:8px">Conta Fechada</span>
+            <span class="badge badge-warning" style="font-size:13px; margin-left:8px">Conta Solicitada</span>
             @endif
         </h2>
         <div style="color:var(--muted); font-size:13px; margin-top:2px">
@@ -309,7 +309,7 @@ Mesa {{ $mesa->numero }} — Conta
         </div>
     </div>
     <div style="display:flex; gap:10px; flex-wrap:wrap">
-        {{-- Só mostra "Novo Pedido" se a conta NÃO estiver fechada --}}
+        {{-- So mostra "Novo Pedido" se a conta NAO estiver solicitada --}}
         @if(!$contaFechada && Auth::user()?->role === 'garcom')
         <a href="{{ route('orders.create', ['table_id' => $mesa->id]) }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Novo Pedido
@@ -321,7 +321,7 @@ Mesa {{ $mesa->numero }} — Conta
     </div>
 </div>
 
-{{-- Aviso conta fechada --}}
+{{-- Aviso conta solicitada --}}
 @if(session('warning'))
 <div style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;color:#fde047;display:flex;align-items:flex-start;gap:10px;font-size:13px">
     <i class="fas fa-exclamation-triangle" style="margin-top:2px;flex-shrink:0;font-size:16px"></i>
@@ -332,8 +332,8 @@ Mesa {{ $mesa->numero }} — Conta
 <div class="aviso-fechada">
     <i class="fas fa-lock" style="font-size:18px; flex-shrink:0"></i>
     <div>
-        <strong>Conta fechada.</strong> Não é possível adicionar novos pedidos.
-        O caixa irá processar o pagamento em breve.
+        <strong>Conta solicitada.</strong> Nao e possivel adicionar novos pedidos.
+        O caixa ira processar o pagamento em breve.
     </div>
 </div>
 @endif
@@ -467,7 +467,7 @@ Mesa {{ $mesa->numero }} — Conta
                 </div>
             </div>
 
-            {{-- Fechar conta (garçom) — só se ainda não fechada --}}
+            {{-- Solicitar conta (garcom) - so se ainda nao solicitada --}}
             @if(($totalPago ?? 0) > 0 || ($taxaGarcom ?? 0) > 0)
             <div style="background:rgba(34,197,94,.06); border:1px solid rgba(34,197,94,.18); border-radius:10px; padding:12px; margin-bottom:14px; font-size:13px">
                 @if(($taxaGarcom ?? 0) > 0)
@@ -492,13 +492,13 @@ Mesa {{ $mesa->numero }} — Conta
                 @csrf
                 <button type="submit" class="btn btn-warning"
                         style="width:100%; justify-content:center; padding:12px; margin-bottom:10px"
-                        onclick="return confirm('Fechar a conta da Mesa {{ $mesa->numero }}?\n\nApós fechar não será possível adicionar novos pedidos.')">
-                    <i class="fas fa-lock"></i> Fechar Conta
+                        onclick="return confirm('Solicitar o fechamento da conta da Mesa {{ $mesa->numero }}?\n\nDepois da solicitacao nao sera possivel adicionar novos pedidos.')">
+                    <i class="fas fa-receipt"></i> Solicitar Conta
                 </button>
             </form>
             @endif
 
-            {{-- Já fechada: aviso para garçom --}}
+            {{-- Ja solicitada: aviso para garcom --}}
             @if($contaFechada && Auth::user()?->role === 'garcom')
             <div style="text-align:center; color:var(--muted); font-size:13px; padding:10px 0">
                 <i class="fas fa-hourglass-half"></i> Aguardando pagamento no caixa
