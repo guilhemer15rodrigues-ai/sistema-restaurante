@@ -186,9 +186,47 @@
 }
 
 .mobile-order-actionbar,
-.mobile-order-fab,
+.BotaoCarrinhoFlutuante,
 .express-products {
     display: none;
+}
+.DrawerCarrinhoOverlay,
+.ConfirmacaoEnviarPedido {
+    display: none;
+}
+.TelaPedidoRapido {
+    display: none;
+}
+.ConfirmacaoEnviarPedido.open {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(0,0,0,.62);
+}
+.confirm-send-card {
+    width: min(420px, 100%);
+    border: 1px solid var(--border);
+    border-radius: 18px 18px 0 0;
+    background: var(--bg2);
+    padding: 18px;
+}
+.confirm-send-card h3 {
+    margin: 0 0 6px;
+    color: #fff;
+    font-size: 19px;
+}
+.confirm-send-card p {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 13px;
+}
+.confirm-send-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
 }
 
 @media (max-width: 768px) {
@@ -200,30 +238,49 @@
         padding-bottom: 238px;
     }
 
+    .DrawerCarrinhoOverlay {
+        position: fixed;
+        inset: 0;
+        z-index: 150;
+        display: block;
+        background: rgba(0,0,0,.58);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .2s ease;
+    }
+
+    .DrawerCarrinhoOverlay.open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
     .resumo-col {
         position: fixed;
-        left: 0;
+        top: 0;
         right: 0;
         bottom: 0;
-        z-index: 160;
-        width: 100%;
+        z-index: 161;
+        width: min(390px, 92vw);
         min-width: 0;
-        max-height: 86vh;
+        max-height: none;
         overflow-y: auto;
         padding: 12px;
         background: #17110d;
-        border-top: 1px solid var(--border);
-        box-shadow: 0 -18px 42px rgba(0,0,0,.45);
-        transform: translateY(105%);
-        transition: transform .18s ease;
+        border-left: 1px solid var(--border);
+        box-shadow: -22px 0 54px rgba(0,0,0,.48);
+        transform: translateX(105%);
+        transition: transform .22s ease;
     }
 
     .resumo-col.open {
-        transform: translateY(0);
+        transform: translateX(0);
     }
 
     .resumo-col .panel {
         margin: 0;
+        min-height: calc(100vh - 24px);
+        display: flex;
+        flex-direction: column;
     }
 
     .mobile-cart-bar {
@@ -290,7 +347,7 @@
         cursor: not-allowed;
     }
 
-    .mobile-order-fab {
+    .BotaoCarrinhoFlutuante {
         position: fixed;
         right: 16px;
         bottom: calc(150px + env(safe-area-inset-bottom));
@@ -300,7 +357,7 @@
         display: grid;
         place-items: center;
         border: 1px solid rgba(250,178,105,.32);
-        border-radius: 50%;
+        border-radius: 18px;
         background: var(--accent);
         color: #fff;
         box-shadow: 0 12px 28px rgba(0,0,0,.42);
@@ -308,7 +365,15 @@
         cursor: pointer;
     }
 
-    .mobile-order-fab small {
+    .BotaoCarrinhoFlutuante.pulse {
+        animation: cartPulse .26s ease;
+    }
+
+    @keyframes cartPulse {
+        50% { transform: scale(1.08); }
+    }
+
+    .BotaoCarrinhoFlutuante small {
         position: absolute;
         top: -5px;
         right: -3px;
@@ -321,6 +386,28 @@
         color: var(--red);
         font-size: 11px;
         font-weight: 900;
+    }
+
+    .TelaPedidoRapido {
+        display: block;
+        margin: -2px -2px 12px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)), var(--bg2);
+    }
+
+    .TelaPedidoRapido h2 {
+        margin: 0;
+        color: #fff;
+        font-size: 20px;
+        line-height: 1.1;
+    }
+
+    .TelaPedidoRapido span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
     }
 
     .express-products {
@@ -379,6 +466,7 @@
     }
 
     .menu-card {
+        border-radius: 14px;
         display: grid;
         grid-template-columns: 76px 1fr auto;
         gap: 10px;
@@ -415,6 +503,73 @@
         margin: 12px 0 8px;
         padding: 6px 0;
         background: var(--bg);
+    }
+
+    .ConfirmacaoEnviarPedido {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        align-items: flex-end;
+        background: rgba(0,0,0,.62);
+    }
+
+    .ConfirmacaoEnviarPedido.open {
+        display: flex;
+    }
+
+    .confirm-send-card {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 18px 18px 0 0;
+        background: var(--bg2);
+        padding: 18px;
+    }
+
+    .confirm-send-card h3 {
+        margin: 0 0 6px;
+        color: #fff;
+        font-size: 19px;
+    }
+
+    .confirm-send-card p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .confirm-send-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .cart-line-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 7px;
+    }
+
+    .cart-line-controls button {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: rgba(255,255,255,.04);
+        color: var(--cream);
+        font-weight: 900;
+    }
+
+    .cart-item-obs {
+        width: 100%;
+        min-height: 34px;
+        margin-top: 7px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: rgba(255,255,255,.035);
+        color: #fff;
+        padding: 6px 8px;
+        font: 800 12px inherit;
     }
 }
 </style>
@@ -460,6 +615,10 @@
 
     {{-- CARDÁPIO --}}
     <div class="cardapio-col">
+        <div class="TelaPedidoRapido">
+            <h2>{{ $pedido ? 'Adicionar pedido' : 'Pedido rapido' }}</h2>
+            <span id="quick-order-table-label">{{ $tableId ? 'Mesa selecionada' : 'Escolha a mesa e lance os itens' }}</span>
+        </div>
 
         <div class="panel" style="padding:12px 16px; margin-bottom:16px">
             <input type="text" id="search-input" class="form-control"
@@ -563,6 +722,8 @@
         @endforelse
     </div>
 
+    <div class="DrawerCarrinhoOverlay" id="drawerCarrinhoOverlay" onclick="closeResumoMobile()" aria-hidden="true"></div>
+
     {{-- RESUMO --}}
     <div class="resumo-col">
         <button type="button" class="mobile-cart-bar" onclick="toggleResumoMobile()">
@@ -573,9 +734,14 @@
         <div class="panel">
             <div class="panel-header">
                 <div class="panel-title"><i class="fas fa-clipboard-list"></i> Resumo</div>
-                <button type="button" class="btn btn-secondary btn-sm btn-icon" onclick="clearAll()">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <div style="display:flex;gap:6px">
+                    <button type="button" class="btn btn-secondary btn-sm btn-icon" onclick="clearAll()" title="Limpar carrinho">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-icon" onclick="closeResumoMobile()" title="Fechar carrinho">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="form-group">
@@ -647,7 +813,7 @@
 
 </div>
 
-<button type="button" class="mobile-order-fab" onclick="openResumoMobile()" aria-label="Abrir resumo do pedido">
+<button type="button" class="BotaoCarrinhoFlutuante" id="botaoCarrinhoFlutuante" onclick="openResumoMobile()" aria-label="Abrir carrinho do pedido">
     <i class="fas fa-cart-shopping"></i>
     <small id="mobile-fab-count">0</small>
 </button>
@@ -659,6 +825,17 @@
     <button type="button" id="mobile-bar-submit" onclick="enviarPedido()" disabled>Enviar</button>
 </div>
 </form>
+
+<div class="ConfirmacaoEnviarPedido" id="confirmacaoEnviarPedido" aria-hidden="true">
+    <div class="confirm-send-card">
+        <h3>Enviar para cozinha</h3>
+        <p>Deseja enviar este pedido para a cozinha?</p>
+        <div class="confirm-send-actions">
+            <button type="button" class="btn btn-secondary" onclick="fecharConfirmacaoEnvio()" style="justify-content:center">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="confirmarEnvioPedido()" style="justify-content:center">Enviar</button>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -672,6 +849,7 @@ const precos = {
 };
 
 const qtds = {};
+const itemObs = {};
 
 // Chave única por pedido/mesa para o localStorage
 const STORAGE_KEY = 'carrinho_{{ $pedido ? "edit_".$pedido->id : "new_".(request()->query("table_id","0")) }}';
@@ -724,6 +902,7 @@ function changeQty(id, delta) {
     if (card) card.classList.toggle('active', qtds[id] > 0);
     updateResumo();
     salvarCarrinho();
+    pulseCartButton();
 }
 
 function clearAll() {
@@ -739,14 +918,29 @@ function clearAll() {
 
 function toggleResumoMobile() {
     document.querySelector('.resumo-col')?.classList.toggle('open');
+    document.getElementById('drawerCarrinhoOverlay')?.classList.toggle('open', document.querySelector('.resumo-col')?.classList.contains('open'));
 }
 
 function openResumoMobile() {
     document.querySelector('.resumo-col')?.classList.add('open');
+    document.getElementById('drawerCarrinhoOverlay')?.classList.add('open');
 }
 
 function closeResumoMobile() {
     document.querySelector('.resumo-col')?.classList.remove('open');
+    document.getElementById('drawerCarrinhoOverlay')?.classList.remove('open');
+}
+
+function pulseCartButton() {
+    const button = document.getElementById('botaoCarrinhoFlutuante');
+    if (!button) return;
+    button.classList.remove('pulse');
+    void button.offsetWidth;
+    button.classList.add('pulse');
+}
+
+function updateItemObs(id, value) {
+    itemObs[id] = value.trim();
 }
 
 window.addObs = function(texto) {
@@ -782,9 +976,18 @@ function updateResumo() {
             const sub = p.preco * qtds[id];
             total += sub;
             totalItens += qtds[id];
-            resumoHtml += `<div class="resumo-row">
-                <span style="color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${qtds[id]}× ${p.nome}</span>
-                <span style="font-weight:700;color:#fff;white-space:nowrap;margin-left:8px">R$ ${sub.toFixed(2).replace('.',',')}</span>
+            resumoHtml += `<div class="resumo-row" style="display:block">
+                <div style="display:flex;justify-content:space-between;gap:8px">
+                    <span style="color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${qtds[id]}x ${p.nome}</span>
+                    <span style="font-weight:700;color:#fff;white-space:nowrap;margin-left:8px">R$ ${sub.toFixed(2).replace('.',',')}</span>
+                </div>
+                <div class="cart-line-controls">
+                    <button type="button" onclick="changeQty(${id}, -1)" aria-label="Diminuir quantidade">-</button>
+                    <strong style="color:#fff">${qtds[id]}</strong>
+                    <button type="button" onclick="changeQty(${id}, 1)" aria-label="Aumentar quantidade">+</button>
+                    <button type="button" onclick="qtds[${id}]=0; updateResumo(); salvarCarrinho();" aria-label="Remover item"><i class="fas fa-trash"></i></button>
+                </div>
+                <input type="text" class="cart-item-obs" value="${itemObs[id] || ''}" oninput="updateItemObs(${id}, this.value)" placeholder="Obs. do item">
             </div>`;
             hiddenHtml += `<input type="hidden" name="itens[${idx}][menu_item_id]" value="${id}">`;
             hiddenHtml += `<input type="hidden" name="itens[${idx}][quantidade]" value="${qtds[id]}">`;
@@ -805,6 +1008,7 @@ function updateResumo() {
     document.getElementById('mobile-bar-items').textContent = totalItens + (totalItens === 1 ? ' item' : ' itens');
     document.getElementById('mobile-bar-total').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
     document.getElementById('mobile-bar-submit').disabled = !hasItems;
+    document.getElementById('quick-order-table-label').textContent = selectedMesaText() + ' - ' + totalItens + (totalItens === 1 ? ' item' : ' itens');
 }
 
 // Busca
@@ -906,10 +1110,34 @@ function enviarPedido() {
         return;
     }
 
-    // Remove inputs anteriores de items
+    abrirConfirmacaoEnvio();
+}
+
+function abrirConfirmacaoEnvio() {
+    document.getElementById('confirmacaoEnviarPedido')?.classList.add('open');
+    document.getElementById('confirmacaoEnviarPedido')?.setAttribute('aria-hidden', 'false');
+}
+
+function fecharConfirmacaoEnvio() {
+    document.getElementById('confirmacaoEnviarPedido')?.classList.remove('open');
+    document.getElementById('confirmacaoEnviarPedido')?.setAttribute('aria-hidden', 'true');
+}
+
+function confirmarEnvioPedido() {
+    const form = document.getElementById('order-form');
+    const obsInput = document.getElementById('observacoes-input');
+    const obsPorItem = Object.keys(itemObs)
+        .filter(id => qtds[id] > 0 && itemObs[id])
+        .map(id => `${precos[id]?.nome || 'Item'}: ${itemObs[id]}`);
+
+    if (obsInput && obsPorItem.length) {
+        const atual = obsInput.value.trim();
+        const extra = 'Obs. itens - ' + obsPorItem.join('; ');
+        obsInput.value = atual ? atual + '; ' + extra : extra;
+    }
+
     form.querySelectorAll('input[name^="itens["], input[name^="items["]').forEach(el => el.remove());
 
-    // Cria os inputs diretamente no form com o nome que o controller espera
     let idx = 0;
     for (const id in qtds) {
         if (qtds[id] > 0) {

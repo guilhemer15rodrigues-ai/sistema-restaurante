@@ -7,7 +7,7 @@
 .garcom-mobile-shell {
     max-width: 520px;
     margin: 0 auto;
-    padding-bottom: 92px;
+    padding-bottom: 106px;
 }
 .HeaderMobileGarcom {
     position: sticky;
@@ -17,9 +17,12 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    margin: -10px -2px 12px;
-    padding: 12px 2px;
-    background: linear-gradient(180deg, rgba(18,13,9,.98), rgba(18,13,9,.86));
+    margin: -10px -4px 12px;
+    padding: 12px 4px 13px;
+    border-bottom: 1px solid rgba(250,178,105,.1);
+    background:
+        linear-gradient(180deg, rgba(28,17,8,.98), rgba(18,13,9,.9)),
+        var(--bg2);
     backdrop-filter: blur(14px);
 }
 .HeaderMobileGarcom h2 {
@@ -47,9 +50,10 @@
     place-items: center;
     border: 1px solid var(--border);
     border-radius: 10px;
-    background: var(--bg2);
+    background: rgba(250,178,105,.06);
     color: var(--cream);
     cursor: pointer;
+    box-shadow: 0 10px 28px rgba(0,0,0,.16);
 }
 .garcom-logout {
     min-height: 40px;
@@ -95,15 +99,15 @@
     gap: 8px;
 }
 .CardResumoStatus {
-    min-height: 82px;
+    min-height: 76px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
     border: 1px solid var(--border);
     border-left: 4px solid var(--status-color);
-    border-radius: 10px;
-    background: var(--bg2);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015)), var(--bg2);
     color: inherit;
     padding: 11px;
     cursor: pointer;
@@ -112,6 +116,19 @@
 .CardResumoStatus.active {
     border-color: color-mix(in srgb, var(--status-color) 44%, var(--border));
     background: color-mix(in srgb, var(--status-color) 10%, var(--bg2));
+}
+.CardResumoStatus,
+.FiltroStatusMesas button,
+.CardMesa,
+.mesa-action-btn,
+.BottomNavigationGarcom a,
+.BottomNavigationGarcom button {
+    transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
+}
+.CardResumoStatus:active,
+.FiltroStatusMesas button:active,
+.mesa-action-btn:active {
+    transform: scale(.98);
 }
 .CardResumoStatus i {
     width: 34px;
@@ -178,9 +195,10 @@
 .CardMesa {
     border: 1px solid var(--border);
     border-left: 4px solid var(--status-color);
-    border-radius: 10px;
-    background: var(--bg2);
-    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)), var(--bg2);
+    padding: 11px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.12);
 }
 .CardMesa.is-hidden {
     display: none;
@@ -225,16 +243,16 @@
 }
 .mesa-card-info {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    margin: 12px 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 11px 0;
 }
 .mesa-card-info div {
     min-width: 0;
     border: 1px solid rgba(250,178,105,.08);
     border-radius: 8px;
     background: rgba(255,255,255,.025);
-    padding: 8px;
+    padding: 7px;
 }
 .mesa-card-info span {
     display: block;
@@ -256,7 +274,7 @@
 .mesa-card-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 7px;
+    gap: 6px;
 }
 .mesa-card-actions.one {
     grid-template-columns: 1fr;
@@ -331,8 +349,8 @@
     align-items: flex-start;
     gap: 10px;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg2);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)), var(--bg2);
     padding: 10px;
 }
 .NotificacaoGarcomItem i {
@@ -395,14 +413,14 @@
     left: 50%;
     bottom: 70px;
     z-index: 30;
-    width: min(480px, calc(100% - 28px));
-    min-height: 48px;
+    width: min(244px, calc(100% - 144px));
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     border: 0;
-    border-radius: 12px;
+    border-radius: 999px;
     background: var(--red);
     color: #fff;
     box-shadow: 0 16px 38px rgba(0,0,0,.38);
@@ -421,6 +439,7 @@
     border-top: 1px solid var(--border);
     background: rgba(18,13,9,.96);
     backdrop-filter: blur(14px);
+    box-shadow: 0 -14px 34px rgba(0,0,0,.28);
 }
 .BottomNavigationGarcom a,
 .BottomNavigationGarcom button {
@@ -441,6 +460,14 @@
 }
 .BottomNavigationGarcom .active {
     color: var(--gold);
+}
+.BottomNavigationGarcom .active i {
+    width: 34px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(250,178,105,.12);
 }
 .garcom-empty {
     border: 1px dashed var(--border);
@@ -479,6 +506,9 @@
     .mesa-card-actions {
         grid-template-columns: 1fr;
     }
+    .mesa-card-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 </style>
 @endsection
@@ -509,7 +539,8 @@
         $orders = $mesa->orders;
         $temPedido = $orders->isNotEmpty();
         $contaSolicitada = $orders->contains('status', 'aguardando_pagamento');
-        $emPreparo = $orders->contains(fn($order) => in_array($order->status, ['aberto', 'em_preparo', 'pronto', 'pronto_entrega']));
+        $pedidoPronto = $orders->contains('status', 'pronto_entrega');
+        $emPreparo = $orders->contains(fn($order) => in_array($order->status, ['aberto', 'em_preparo', 'pronto']));
         $primeiroPedido = $orders->sortBy('created_at')->first();
         $abertura = $primeiroPedido?->created_at;
         $total = $orders->sum('total');
@@ -521,6 +552,11 @@
             $statusLabel = 'Aguardando conta';
             $statusColor = '#ef4444';
             $statusIcon = 'fa-file-invoice-dollar';
+        } elseif ($pedidoPronto) {
+            $uiStatus = 'pedido_pronto';
+            $statusLabel = 'Pedido pronto';
+            $statusColor = '#22c55e';
+            $statusIcon = 'fa-bell-concierge';
         } elseif ($emPreparo || $mesa->status === 'ocupada') {
             $uiStatus = 'ocupada';
             $statusLabel = $emPreparo ? 'Pedido em preparo' : 'Ocupada';
@@ -543,6 +579,7 @@
             'orders' => $orders,
             'temPedido' => $temPedido,
             'contaSolicitada' => $contaSolicitada,
+            'pedidoPronto' => $pedidoPronto,
             'emPreparo' => $emPreparo,
             'primeiroPedido' => $primeiroPedido,
             'abertura' => $abertura,
@@ -559,14 +596,14 @@
     $ocupadas = $mesaCards->where('uiStatus', 'ocupada')->count();
     $reservadas = $mesaCards->where('uiStatus', 'reservada')->count();
     $aguardandoConta = $mesaCards->where('uiStatus', 'aguardando_conta')->count();
-    $pedidosEmPreparo = $pedidosGarcom->whereIn('status', ['aberto', 'em_preparo', 'pronto', 'pronto_entrega'])->count();
+    $pedidosProntos = $mesaCards->where('uiStatus', 'pedido_pronto')->count();
 @endphp
 
 <div class="garcom-mobile-shell">
     <header class="HeaderMobileGarcom">
         <div>
             <h2>Ola, {{ strtok(Auth::user()?->name ?? 'Garcom', ' ') }}</h2>
-            <p>Mesas e pedidos</p>
+            <p>Mesas e atendimentos</p>
             <span class="garcom-shift"><i class="fa-solid fa-circle"></i> Em atendimento</span>
         </div>
         <div class="garcom-head-actions">
@@ -590,9 +627,9 @@
                 <div><strong>{{ $ocupadas }}</strong><span>Ocupadas</span></div>
                 <i class="fa-solid fa-users"></i>
             </button>
-            <button type="button" class="CardResumoStatus" style="--status-color:#eab308" data-filter-button="preparo">
-                <div><strong>{{ $pedidosEmPreparo }}</strong><span>Em preparo</span></div>
-                <i class="fa-solid fa-fire-burner"></i>
+            <button type="button" class="CardResumoStatus" style="--status-color:#22c55e" data-filter-button="pedido_pronto">
+                <div><strong>{{ $pedidosProntos }}</strong><span>Pedidos prontos</span></div>
+                <i class="fa-solid fa-bell-concierge"></i>
             </button>
             <button type="button" class="CardResumoStatus" style="--status-color:#ef4444" data-filter-button="aguardando_conta">
                 <div><strong>{{ $aguardandoConta }}</strong><span>Aguardando conta</span></div>
@@ -612,6 +649,7 @@
             <button type="button" data-filter-button="ocupada">Ocupadas</button>
             <button type="button" data-filter-button="reservada">Reservadas</button>
             <button type="button" data-filter-button="aguardando_conta">Aguardando conta</button>
+            <button type="button" data-filter-button="pedido_pronto">Pedido pronto</button>
         </div>
         <input type="search" class="garcom-search" id="garcomMesaSearch" placeholder="Buscar mesa">
     </section>
@@ -629,6 +667,7 @@
                  data-mesa-card
                  data-status="{{ $card['uiStatus'] }}"
                  data-preparo="{{ $card['emPreparo'] ? '1' : '0' }}"
+                 data-pronto="{{ $card['pedidoPronto'] ? '1' : '0' }}"
                  data-number="{{ $mesa->numero }}">
             <div class="mesa-card-top">
                 <div class="mesa-card-number"><small>Mesa</small>{{ str_pad($mesa->numero, 2, '0', STR_PAD_LEFT) }}</div>
@@ -768,12 +807,12 @@
     <button type="button" onclick="scrollToSection('garcomPedidos')">
         <i class="fa-solid fa-receipt"></i><span>Pedidos</span>
     </button>
+    <a href="{{ route('dashboard.cozinha') }}">
+        <i class="fa-solid fa-fire-burner"></i><span>Cozinha</span>
+    </a>
     <button type="button" onclick="scrollToSection('garcomNotificacoes')">
         <i class="fa-solid fa-bell"></i><span>Notificacoes</span>
     </button>
-    <a href="{{ route('dashboard') }}">
-        <i class="fa-solid fa-user"></i><span>Perfil</span>
-    </a>
 </nav>
 
 <div class="ConfirmacaoSolicitarConta" id="confirmacaoSolicitarConta" aria-hidden="true">
@@ -810,11 +849,13 @@ function aplicarFiltroGarcom() {
     mesaCards.forEach((card) => {
         const status = card.dataset.status;
         const preparo = card.dataset.preparo === '1';
+        const pronto = card.dataset.pronto === '1';
         const number = String(card.dataset.number || '').toLowerCase();
         const matchesQuery = !query || number.includes(query);
         const matchesFilter = activeFilter === 'todas'
             || status === activeFilter
-            || (activeFilter === 'preparo' && preparo);
+            || (activeFilter === 'preparo' && preparo)
+            || (activeFilter === 'pedido_pronto' && pronto);
         card.classList.toggle('is-hidden', !(matchesQuery && matchesFilter));
     });
     filterButtons.forEach((button) => {
@@ -855,6 +896,12 @@ document.addEventListener('keydown', (event) => {
 
 function scrollToSection(id) {
     document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+    document.querySelectorAll('.BottomNavigationGarcom button').forEach((button) => button.classList.remove('active'));
+    const map = {garcomMesas: 0, garcomPedidos: 1, garcomNotificacoes: 3};
+    const idx = map[id];
+    if (typeof idx !== 'undefined') {
+        document.querySelectorAll('.BottomNavigationGarcom button')[idx === 3 ? 2 : idx]?.classList.add('active');
+    }
 }
 
 document.querySelectorAll('.js-ready-deliver').forEach((form) => {
