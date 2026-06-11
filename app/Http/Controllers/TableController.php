@@ -67,7 +67,7 @@ class TableController extends Controller
         $totalComTaxa = $totalConta + $taxaGarcom;
         $saldoRestante = max(0, round($totalComTaxa - $totalPago, 2));
 
-        // Conta solicitada significa que os pedidos ja foram enviados para o caixa.
+        // Conta fechada significa que os pedidos já foram enviados para o caixa.
         $contaFechada = $pedidos->contains(
             fn($p) => $p->status === 'aguardando_pagamento'
         );
@@ -85,26 +85,26 @@ class TableController extends Controller
         ));
     }
 
-    // Garcom solicita a conta; o caixa conclui o pagamento.
+    // ── FECHAR CONTA (garçom fecha a conta da mesa) ──────────────────────────
     public function fecharConta(Table $mesa)
     {
         if (Auth::user()?->role !== 'garcom') abort(403);
 
-        // Buscar pedidos que ainda nao foram enviados para o caixa.
-        // Pedidos em pronto_entrega tambem devem virar aguardando_pagamento ao solicitar a conta.
+        // Buscar pedidos que ainda não foram enviados para o caixa.
+        // Pedidos em pronto_entrega também devem virar aguardando_pagamento ao fechar a conta.
         $pedidos = Order::where('table_id', $mesa->id)
             ->whereNotIn('status', ['pago', 'cancelado', 'aguardando_pagamento'])
             ->get();
 
         if ($pedidos->isEmpty()) {
-            // Verificar se ja tem pedidos esperando pagamento
+            // Verificar se já tem pedidos fechados esperando pagamento
             $jaFechados = Order::where('table_id', $mesa->id)
                 ->where('status', 'aguardando_pagamento')
                 ->exists();
 
             if ($jaFechados) {
                 return redirect()->route('mesas.conta', $mesa)
-                    ->with('info', 'A conta desta mesa ja foi solicitada. Aguardando pagamento no caixa.');
+                    ->with('info', 'ℹ️ A conta desta mesa já foi fechada. Aguardando pagamento no caixa.');
             }
 
             return back()->with('error', '❌ Nenhum pedido em aberto nesta mesa.');
@@ -114,7 +114,7 @@ class TableController extends Controller
 
         if ($temEmPreparo) {
             return redirect()->route('mesas.conta', $mesa)
-                ->with('error', 'Ainda ha pedidos em preparo. Aguarde a cozinha marcar como pronto antes de solicitar a conta.');
+                ->with('error', '⚠️ Ainda há pedidos em preparo. Aguarde a cozinha marcar como pronto antes de fechar a conta.');
         }
 
         DB::transaction(function () use ($pedidos, $mesa) {
@@ -129,7 +129,7 @@ class TableController extends Controller
         });
 
         return redirect()->route('mesas.conta', $mesa)
-            ->with('success', 'Conta solicitada! Pedidos enviados para o caixa.');
+            ->with('success', '✅ Conta fechada! Pedidos enviados para o caixa.');
     }
 
     public function juntar(Request $request, Table $mesa)

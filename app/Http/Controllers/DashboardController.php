@@ -49,10 +49,7 @@ class DashboardController extends Controller
 
             'garcom' => view('dashboard.garcom', [
                 'mesas' => Table::with([
-                    'garcom',
-                    'orders' => fn($q) => $q->whereNotIn('status', ['pago', 'cancelado'])
-                        ->with('items.menuItem', 'user')
-                        ->orderBy('created_at'),
+                    'orders' => fn($q) => $q->whereNotIn('status', ['pago', 'cancelado']),
                 ])->orderBy('numero')->get(),
 
                 'pedidosGarcom' => Order::where('user_id', $user->id)
